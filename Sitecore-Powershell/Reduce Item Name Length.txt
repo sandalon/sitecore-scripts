@@ -1,0 +1,16 @@
+cd 'master:/sitecore/content/BayCareDotOrg/Globals/Web Forms'
+Write-Host "Starting";
+New-UsingBlock (New-Object Sitecore.Data.BulkUpdateContext) {
+    Write-Host "Begin Update";
+    Get-ChildItem -Recurse . | Where-Object { $_.Name.length -gt 40   } | ForEach-Object { 
+       $originalName = $_.Name;
+       $newName = $_.Name.Substring(0,40).Trim();
+       
+       Write-Host $newName -f Green;
+       $_.Editing.BeginEdit()
+       $_.Name = $newName;
+       $_.'__Display name' = $originalName;
+       $_.Editing.EndEdit()
+    }
+    Write-Host "Done";
+}
