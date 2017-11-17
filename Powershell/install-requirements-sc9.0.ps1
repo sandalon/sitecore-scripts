@@ -106,7 +106,7 @@ $table += $out
 $table | Format-Table | Out-String | ColorWord -word "FAIL" -color red
 
 Write-Host "Windows Features" -ForegroundColor Green
-
+# Get-WindowsOptionalFeature -online | ft
 $features = @('IIS-WebServerRole',
               'IIS-WebServer',
               'IIS-CommonHttpFeatures',
