@@ -1,0 +1,39 @@
+cd 'master:/sitecore/content/Global/MediaItems'
+Write-Host "Starting";
+
+$destPath = 'master:/sitecore/content/...'
+
+$defaultImage = Get-Item 'master:\media library\logo'
+
+New-UsingBlock (New-Object Sitecore.Data.BulkUpdateContext) {
+    Get-ChildItem -Recurse . | Where-Object { $_.TemplateName -match "Media"   } | ForEach-Object { 
+        
+        $yearPath = GetOrCreateYear($_.Parent.Name, $destPath)
+        $itemPath = $yearPath + '/' + $_.Name
+        $item = New-Item $itemPath -type "Sample/Sample Item"
+        
+        $item.Editing.BeginEdit()
+
+        $item.Editing.EndEdit()
+    }
+
+}
+
+
+function GetOrCreateYear {
+    param(
+        [string] $year,
+        [string] $destination
+    )
+
+    $itemPath = $destination + '/' + $year
+    $yearItem = Get-Item $itemPath -ErrorAction Ignore
+    
+    if($yearItem){
+        return $yearItem.Path
+    }
+    else{
+        $yearItem = New-Item $itemPath -type "Sample/Sample Item"
+        return $yearItem.Path
+    }
+}
