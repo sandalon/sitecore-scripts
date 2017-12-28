@@ -2,7 +2,6 @@ cd 'master:/sitecore/content/Global/MediaItems'
 Write-Host "Starting";
 
 $destPath = 'master:/sitecore/content/...'
-
 $defaultImage = Get-Item 'master:\media library\logo'
 
 New-UsingBlock (New-Object Sitecore.Data.BulkUpdateContext) {
@@ -13,12 +12,15 @@ New-UsingBlock (New-Object Sitecore.Data.BulkUpdateContext) {
         $item = New-Item $itemPath -type "Sample/Sample Item"
         
         $item.Editing.BeginEdit()
-
+        $item.Thumbnail = $defaultImage
+        $item.Title = $_.Title
+        $item.PublicationDate = $_.Date
+        $item.State = "VA"
+        $item.Content = $_.Media
         $item.Editing.EndEdit()
     }
 
 }
-
 
 function GetOrCreateYear {
     param(
