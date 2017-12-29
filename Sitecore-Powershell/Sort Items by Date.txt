@@ -1,0 +1,9 @@
+cd 'master:/sitecore/content/Globals/Staging Data/Events'
+
+Get-ChildItem -Recurse . | 
+    Sort "Start Date" |
+    Where-Object { $_.TemplateName -eq "Event"   } | 
+    Show-ListView -property `
+        @{ Name="Item Name"; Expression={$_.Name}},
+        @{ Name="Date"; Expression={$_."Start Date"}} `
+    
